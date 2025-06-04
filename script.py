@@ -43,7 +43,7 @@ for i in range(x.shape[1]):
 ######EDA#######
 #Nan values not present (dataset confirmed it) 
 #Split dataset in train and test 
-X_tr, X_ts, y_tr, y_ts= train_test_split(x_full, y_full, test_size=0.35, random_state=2)
+X_tr, X_ts, y_tr, y_ts= train_test_split(x, y, test_size=0.35, random_state=2)
 y_tr = y_tr.to_numpy()
 y_ts = y_ts.to_numpy()
 print(X_tr.shape)
@@ -57,7 +57,7 @@ X_ts_transf = scaler.transform(X_ts)
 softmax_reg_model = LogisticRegression(multi_class='multinomial',n_jobs=-1,max_iter=10000) #haven't transformed y into OneHotEncoded vector because sklearn manages it automatically. Argue about the doc saying that dual solution is preferred when n_samples>n_features, should it be the opposite? 
 svm_model = SVC(decision_function_shape='ovr',max_iter=2000,cache_size=1000) 
 random_forest_model = RandomForestClassifier(n_jobs=-1)
-mlp_model = MLPClassifier(max_iter=1000)
+mlp_model = MLPClassifier(max_iter=2000,early_stopping=True)
 #add NN.
 
 #####Parameter tuning (since i'm using >= 500K samples i need to limit the GridSearchCV, otherwise it will take too long, i'll do a double search with RandomizedSearchCV to get indicative paramteres to insert in the limited GridSearchCV)
@@ -130,7 +130,7 @@ After GridSearchCV (50k  REDUCED_DATA_SET):
     Which corresponds to an Accuracy of  0.7301538333355969 #HIGHER THAN THE FULL_DATASET ONE?
 '''
 
-
+'''
 hparameters = {'tol': [1e-4, 1e-3, 5e-3, 1e-1,1,1e1,1e2],'C': [1e-4,1e-3,1e-2,1,10],'kernel': ['linear', 'poly', 'rbf']}
 clf = RandomizedSearchCV(estimator=svm_model, param_distributions=hparameters, scoring='accuracy', cv=3,verbose=True,n_jobs=-1) 
 clf.fit(X_tr_transf, y_tr)
@@ -139,21 +139,27 @@ print('Overall, the best choice for tol is ', clf.best_params_.get('tol'))
 print('Overall, the best choice for C is ', clf.best_params_.get('C'))
 print('Overall, the best choice for kernel is ', clf.best_params_.get('kernel'))
 print('Which corresponds to an Accuracy of ', clf.best_score_)
-
 '''
-hparameters = {'C': [1,1.2,0.8,1.5,0.5],'kernel': ['linear', 'poly', 'rbf']}
+'''
+hparameters = {'tol': [1, 1.5, 0.5], 'C': [0.001, 0.003, 0.0007], 'kernel': ['rbf']}
 clf = GridSearchCV(estimator=svm_model, param_grid=hparameters, scoring='accuracy', cv=3,verbose=True,n_jobs=-1) 
 clf.fit(X_tr_transf, y_tr)
 print('SVC ..................')
 print('Overall, the best choice for C is ', clf.best_params_.get('C'))
-print('Overall, the best choice for kernel is ', clf.best_params_.get('kernel'))
+print('Overall, the best choice for tol is ', clf.best_params_.get('tol'))
 print('Which corresponds to an Accuracy of ', clf.best_score_)
 '''
 '''
-After RandomizedSearchCV (FULL DATA_SET):
-
+After RandomizedSearchCV (FULL DATA_SET): ####My hardware can't support these workloads, SVC's parameter tuning revealed to be particurarly RAM-hungry (94% of RAM usage with 16GB capcity.), this is probably due to the necessity to store all the support vectors since we are using kernels.
+    Overall, the best choice for tol is  1
+    Overall, the best choice for C is  0.001
+    Overall, the best choice for kernel is  rbf
+    Which corresponds to an Accuracy of  0.5067895308945213
 After GriSearchCV (FULL DATA_SET): 
-
+    Overall, the best choice for C is  0.001
+    Overall, the best choice for tol is  1
+    Overall, the best choice for kernel is  rbf
+    Which corresponds to an Accuracy of  0.5069363285812726
 '''
 '''
 After RandomizedSearchCV (50k  REDUCED_DATA_SET): 
@@ -164,7 +170,42 @@ After GridSearchCV (50k  REDUCED_DATA_SET):
     Overall, the best choice for C is  1.5
     Overall, the best choice for kernel is  rbf
     Which corresponds to an Accuracy of  0.753907822488601
-
+'''
+'''
+hparameters = {'hidden_layer_sizes': [100,1000,500,10,300],'activation': ['tanh','identity','logistic','relu'],'solver': ['lbfgs', 'adam'],'alpha': [1e-4,1e-3,1e-2,1e-1,1,10]}
+clf = RandomizedSearchCV(estimator=mlp_model, param_distributions=hparameters, scoring='accuracy', cv=3,verbose=True,n_jobs=-1) 
+clf.fit(X_tr_transf, y_tr)
+print('MLP ..................')
+print('Overall, the best choice for hidden_layer_sizes is ', clf.best_params_.get('hidden_layer_sizes'))
+print('Overall, the best choice for activation is ', clf.best_params_.get('activation'))
+print('Overall, the best choice for solver is ', clf.best_params_.get('solver'))
+print('Overall, the best choice for alpha is ', clf.best_params_.get('alpha'))
+print('Which corresponds to an Accuracy of ', clf.best_score_)
+'''
+'''
+hparameters = {'hidden_layer_sizes': [500,550,450],'activation': ['relu'],'solver': ['lbfgs'],'alpha': [10,20,50,100]}
+clf = GridSearchCV(estimator=mlp_model, param_grid=hparameters, scoring='accuracy', cv=3,verbose=True,n_jobs=-1) 
+clf.fit(X_tr_transf, y_tr)
+print('MLP ..................')
+print('Overall, the best choice for hidden_layer_sizes is ', clf.best_params_.get('hidden_layer_sizes'))
+print('Overall, the best choice for activation is ', clf.best_params_.get('activation'))
+print('Overall, the best choice for solver is ', clf.best_params_.get('solver'))
+print('Overall, the best choice for alpha is ', clf.best_params_.get('alpha'))
+print('Which corresponds to an Accuracy of ', clf.best_score_)
+'''
+'''
+After RandomizedSearchCV (50k  REDUCED_DATA_SET): 
+    Overall, the best choice for hidden_layer_sizes is  500
+    Overall, the best choice for activation is  relu
+    Overall, the best choice for solver is  lbfgs
+    Overall, the best choice for alpha is  10
+    Which corresponds to an Accuracy of  0.8424924427745276
+After GridSearchCV (50k  REDUCED_DATA_SET): 
+    Overall, the best choice for hidden_layer_sizes is  500
+    Overall, the best choice for activation is  relu
+    Overall, the best choice for solver is  lbfgs
+    Overall, the best choice for alpha is  10
+    Which corresponds to an Accuracy of  0.8424924427745276
 '''
 
 print('After GriSearchCV:')

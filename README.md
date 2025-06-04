@@ -43,6 +43,33 @@ The dataset contains **581,012 instances** and **54 features**, including:
 Although GIS and remote sensing data can provide physical and environmental attributes of land areas, **forest cover labels are often missing or outdated**. This project aims to address this gap by training a supervised model capable of predicting cover types using easily available GIS layers, with the final goal to predict the missing cover labels.
 
 ---
+## Usage
+This project supports two working modes for training machine learning models on the Covertype dataset(and can be manually adapted):
+### 1. Full Dataset Mode (~500,000 samples)
+- Offers the most accurate results but is **very resource-hungry**.
+- Not recommended on machines with **less than 32 GB of RAM** or without **could computing**.
+- Expect **long training times**, especially during hyperparameter tuning.
+### 2. Reduced Dataset Mode (50,000 samples)
+- Much lighter and suitable for standard hardware (e.g., 8–16 GB RAM).
+- Offers a good balance between speed and performance for testing or experimentation.
+
+By default, the script loads the full dataset and creates a 50k-sample subset using `train_test_split`, to use the full dataset change the variables in the second `train_test_split` (the one used to split the dataset into X_tr and X_ts).
+
+---
+
+#### Hyperparameter Tuning Workflow
+
+The training pipeline uses a **two-stage tuning approach** for best results:
+
+1. **Run all the `RandomizedSearchCV`** to explore a wide range of parameters quickly.
+2. **Stop the program and modify `hparameters={...}`** of all `GridSearchCV` using values close to those found by `RandomizedSearchCV` for each model.
+3. **Run all `GridSearchCV`** and compare the accuracy scores of the models.
+4. **Choose the model** with the highest accuracy and insert it in `best_model = ` (*line 216*) inluding the ideal parameteres found with the `GridSearchCV`. 
+
+#### Fitting the best model (final evaluation)
+**Choose the model** with the highest accuracy and insert it in `best_model = ` (*line 216*) inluding the ideal parameteres found with the `GridSearchCV`.
+
+---
 
 ## Applications
 - **Forest management and planning** in areas lacking recent survey data.
