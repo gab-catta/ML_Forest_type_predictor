@@ -1,4 +1,4 @@
-#  Forest Cover Type Prediction with Machine Learning
+# Forest Cover Type Prediction with Machine Learning
 ### This project implements a machine learning script to predict forest cover types based on cartographic and environmental data using the [Covertype dataset](https://archive.ics.uci.edu/dataset/31/covertype) from the UCI Machine Learning Repository.
 
 ---
