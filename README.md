@@ -41,7 +41,7 @@ Although GIS and remote sensing data can provide physical and environmental attr
 ## Usage
 This project implement a preliminary split to decide the number of samples you want to work with (based on your computational resources).
 - **FULL DATASET**: For the whole 581,012 samples dataset just type `max`.
-- **CUSTOM SIZE**: Input the desired number of samples you want to work with.
+- **CUSTOMIZED DATASET'S SIZE**: Input the desired number of samples you want to work with.
 
 ### Hyperparameter Tuning Workflow
 
