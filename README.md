@@ -1,25 +1,21 @@
 # Forest Cover Type Prediction with Machine Learning
-### This project implements a machine learning script to predict forest cover types based on cartographic and environmental data using the [Covertype dataset](https://archive.ics.uci.edu/dataset/31/covertype) from the UCI Machine Learning Repository.
+### This project implements a Machine Learning script to predict forests' cover types (*what species of trees thrive in a certain area*) based on cartographic and environmental data using the [Covertype dataset](https://archive.ics.uci.edu/dataset/31/covertype) from the UCI Machine Learning Repository.
+##### Note: *If the link to the UCI's dataset doesn't work, the reason could be dued to the removal of the dataset from their website.* The script will work anyway since i uploaded the entire dataset in a CSV file.
 
 ---
 ## Purpose
-#### The goal of this project is to train and evaluate a machine learning model capable of predicting forest cover types based on geospatial and environmental features such as elevation, slope, aspect, distances to hydrology and roads, and soil classification.
+#### The goal of this project is to train and evaluate a machine learning model capable of predicting forests' cover types based on geospatial and environmental features such as elevation, slope, aspect, distances to hydrology and roads, and soil classification.
 
-Although physical and environmental attributes of land areas are widely available through GIS and remote sensing, **up-to-date forest cover labels are not always available — especially in remote or infrequently surveyed regions**. This project's goal is to fill that gap by training a supervised model that can predict cover types using readily available geospatial layers.
+forAlthough physical and environmental attributes of land areas are widely available through GIS and remote sensing, **up-to-date forest cover labels are not always available — especially in remote or infrequently surveyed regions**. This project's goal is to fill that gap by training a supervised model that can predict forests' types using available geospatial data.
 
-### Supporting References
-- *"Forest remote sensing data worldwide, especially acquired from sensors on satellites, are abundant and generally easily obtainable. In sharp contrast, there is a scarcity of ground-based data, including labels or annotations."*  
-[OpenForest: A data catalogue for machine learning in forest monitoring(2023)](https://openforestdata.org/)
+#### Supporting References
+- *“Forest remote sensing data worldwide, especially acquired from sensors on satellites, are abundant and generally easily obtainable. In sharp contrast, there is a scarcity of ground-based data, including labels or annotations.”*  
+[OpenForest: A data catalogue for machine learning in forest monitoring(2025)](https://www.cambridge.org/core/journals/environmental-data-science/article/openforest-a-data-catalog-for-machine-learning-in-forest-monitoring/F62FBEADFF8E3A10C6EDA789D7D180C6)
 
-- *"Despite the growing availability of satellite imagery, obtaining reliable and comprehensive ground-truth labels remains a significant challenge, particularly in remote or inaccessible regions, limiting the accuracy and applicabilityTechnologies of supervised land cover classification models."*  
-[Data Scarcity in Remote Sensing: Challenges for Supervised Land Cover Mapping (2023)](https://doi.org/10.1016/j.rse.2023.113456)
-
-- *"Land cover characterization and change detection requires an effective classification algorithm which is in turn dependent on adequate training. Gathering comprehensive training data for the whole of the Earth's land surface is clearly very challenging logistically."*  
-[Global characterization and monitoring of forest cover using Landsat data: opportunities and challenges (2012)](https://www.sciencedirect.com/science/article/pii/S0034425712002255)
+- *“Reliable data annotation requires field-surveys. Therefore, full segmentation maps are expensive to produce, and training data is often sparse, point-like, and limited to areas accessible by foot.”*
+[Habitat classification from satellite observations with sparse annotations (2022)](https://arxiv.org/abs/2209.12995?utm_source=chatgpt.com)
 
 
-
-**Note**: The project is based on features and data from the Roosevelt National Forest of northern Colorado, but can be adapted to any territory if similar features are available (even with less features than the original project). 
 
 ---
 
@@ -28,15 +24,14 @@ Although physical and environmental attributes of land areas are widely availabl
 **Source**: UCI Machine Learning Repository  
 **Original Paper**: Blackard, J.A. and Dean, D.J. (1999)  
 **Link**: [Covertype dataset](https://archive.ics.uci.edu/dataset/31/covertype)  
-**Note**: The project is based on features and data from the Roosevelt National Forest of northern Colorado, but it can be adapted to any territory if similar features are available (even with fewer features).
+**Note**: The project is based on features and data taken in the **Roosevelt National Forest** of northern Colorado, but can be adapted to any territory if similar features are available (even using less features than the original dataset). 
 
 The dataset contains **581,012 instances** and **54 features**, including:
 - **Quantitative features**: elevation, aspect, slope, distances to water/roads/fire, and hillshade at various times.
 - **Categorical features**: 
   - 4 One-hot-encoded wilderness area indicators
   - 40 One-hot-encoded soil type indicators derived from the **STATSGO soil map** by the USGS
-- **Target**: Forest cover type (1–7), including species like spruce/fir, lodgepole pine, ponderosa pine, and others.
-
+- **Target**: Forest cover type (1–7), the trees species are Spruce/Fir, Lodgepole Pine, Ponderosa Pine, Cottonwood/Willow, Aspen, Douglas-fir, Krummholz.
 ---
 
 ## Problem Statement
@@ -44,16 +39,9 @@ Although GIS and remote sensing data can provide physical and environmental attr
 
 ---
 ## Usage
-This project supports two working modes for training machine learning models on the Covertype dataset(and can be manually adapted):
-### 1. Full Dataset Mode (~500,000 samples)
-- Offers the most accurate results but is **very resource-hungry**.
-- Not recommended on machines with **less than 32 GB of RAM** or without **could computing**.
-- Expect **long training times**, especially during hyperparameter tuning.
-### 2. Reduced Dataset Mode (50,000 samples)
-- Much lighter and suitable for standard hardware (e.g., 8–16 GB RAM).
-- Offers a good balance between speed and performance for testing or experimentation.
-
-By default, the script loads the full dataset and creates a 50k-sample subset using `train_test_split`, to use the full dataset change the variables in the second `train_test_split` (the one used to split the dataset into X_tr and X_ts).
+This project implement a preliminary split to decide the number of samples you want to work with (based on your computational resources).
+- **FULL DATASET**: For the whole 581,012 samples dataset just type `max`.
+- **CUSTOM SIZE**: Input the desired number of samples you want to work with.
 
 ### Hyperparameter Tuning Workflow
 
