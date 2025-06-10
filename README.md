@@ -48,7 +48,7 @@ This project implement a preliminary split to decide the number of samples you w
 The training pipeline uses a `GridSearchCV` for tuning the and finding the best hyperparameters for each model.
 
 ### Fitting the best model (final evaluation)
-**Choose the model** with the highest accuracy and insert it in `best_model = ` (*line 216*) inluding the ideal parameteres found with the `GridSearchCV`.
+**Choose the model** with the highest accuracy (*line 161*) and insert it in `best_model = ` inluding the ideal parameteres found with the `GridSearchCV`.
 
 ---
 
