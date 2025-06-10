@@ -45,12 +45,7 @@ This project implement a preliminary split to decide the number of samples you w
 
 ### Hyperparameter Tuning Workflow
 
-The training pipeline uses a **two-stage tuning approach** for best results:
-
-1. **Run all the `RandomizedSearchCV`** to explore a wide range of parameters quickly.
-2. **Stop the program and modify `hparameters={...}`** of all `GridSearchCV` using values close to those found by `RandomizedSearchCV` for each model.
-3. **Run all `GridSearchCV`** and compare the accuracy scores of the models.
-4. **Choose the model** with the highest accuracy and insert it in `best_model = ` (*line 216*) inluding the ideal parameteres found with the `GridSearchCV`. 
+The training pipeline uses a `GridSearchCV` for tuning the and finding the best hyperparameters for each model.
 
 ### Fitting the best model (final evaluation)
 **Choose the model** with the highest accuracy and insert it in `best_model = ` (*line 216*) inluding the ideal parameteres found with the `GridSearchCV`.
